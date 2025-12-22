@@ -24,11 +24,11 @@ spec:
                 configMapKeyRef:
                   name: markenx-api-config
                   key: DB_NAME
-            - name: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: markenx-db-secret
-                  key: MYSQL_ROOT_PASSWORD
+                  key: DB_PASSWORD
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
