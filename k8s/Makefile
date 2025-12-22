@@ -1,7 +1,7 @@
 # =========================
 # Variables
 # =========================
-K8S_DIR = k8s/base
+K8S_DIR = base
 APP_NAME = markenx-api
 
 # =========================
