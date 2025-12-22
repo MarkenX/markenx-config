@@ -30,9 +30,9 @@ argocd-password:
 	  -o jsonpath="{.data.password}" | base64 --decode ; echo
 
 argocd-port-forward:
-	@echo "ArgoCD UI available at http://localhost:8080"
+	@echo "ArgoCD UI available at http://localhost:8085"
 	kubectl port-forward svc/argocd-server \
-	  -n $(ARGOCD_NAMESPACE) 8080:443
+	  -n $(ARGOCD_NAMESPACE) 8085:443
 
 argocd-delete:
 	@echo "🗑 Removing ArgoCD..."
