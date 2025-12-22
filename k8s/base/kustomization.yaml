@@ -8,3 +8,4 @@ resources:
   - mysql-service.yaml
   - api-deployment.yaml
   - api-service.yaml
+  - argocd-application.yaml
