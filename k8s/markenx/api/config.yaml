@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: markenx-api-config
+data:
+  APP_NAME: markenx-api
+  SERVER_PORT: "8080"
+  CONTEXT_PATH: /api/v1
+  SPRING_PROFILES_ACTIVE: prod
+
+  DB_HOST: mysql
+  DB_PORT: "3306"
+  DB_NAME: markenx
