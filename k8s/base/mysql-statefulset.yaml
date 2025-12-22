@@ -27,7 +27,7 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secret
+                  name: markenx-db-secret
                   key: MYSQL_ROOT_PASSWORD
           volumeMounts:
             - name: mysql-data
