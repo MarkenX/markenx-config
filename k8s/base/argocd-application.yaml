@@ -10,7 +10,6 @@ spec:
     repoURL: https://github.com/MarkenX/markenx-config.git
     targetRevision: main
     path: k8s/base
-    kustomize: {}
 
   destination:
     server: https://kubernetes.default.svc
