@@ -29,6 +29,12 @@ spec:
             limits:
               memory: "768Mi"
               cpu: "500m"
+          startupProbe:
+            httpGet:
+              path: /api/v1/actuator/health/liveness
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /api/v1/actuator/health/readiness
