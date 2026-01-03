@@ -16,7 +16,7 @@ spec:
       serviceAccountName: ingress-nginx
       containers:
         - name: controller
-          image: k8s.gcr.io/ingress-nginx/controller:v1.16.0
+          image: registry.k8s.io/ingress-nginx/controller:v1.10.0
           args:
             - /nginx-ingress-controller
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
