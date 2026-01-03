@@ -11,6 +11,8 @@ resources:
   - cluster-role-binding.yaml
   - deployment-operator.yaml
   - keycloak-instance.yaml
+  - keycloak-application.yaml
+  - postgres
 
 configMapGenerator:
   - name: keycloak-scripts

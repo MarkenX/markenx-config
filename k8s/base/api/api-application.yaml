@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/MarkenX/markenx-config.git
     targetRevision: main
-    path: k8s/base
+    path: k8s/base/api
 
   destination:
     server: https://kubernetes.default.svc
