@@ -1,0 +1,37 @@
+{
+  "realm": "markenx",
+  "enabled": true,
+  "displayName": "MarkenX",
+  "registrationAllowed": false,
+  "rememberMe": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "bruteForceProtected": true,
+
+  "roles": {
+    "realm": [
+      { "name": "ADMIN" },
+      { "name": "STUDENT" }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "markenx-api",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "clientAuthenticatorType": "client-secret"
+    }
+  ],
+
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "supportedLocales": ["en", "es"],
+  "defaultLocale": "es",
+
+  "eventsEnabled": true,
+  "eventsListeners": ["jboss-logging"]
+}
