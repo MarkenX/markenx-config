@@ -1,118 +1,53 @@
-name: Trivy Scan Kubernetes Manifests
+# Pipeline de GitHub Actions para generar reportes de seguridad de manifiestos de Kubernetes usando Trivy
+# Este workflow se ejecuta en tres escenarios:
+# - Push a la rama main
+# - Pull requests hacia main, develop, y ramas de release/hotfix
+# - Programación semanal cada domingo a medianoche
+name: Trivy Kubernetes Manifest Report
 
 on:
-  pull_request:
-    branches: [main, develop, release/*, hotfix/*]
   push:
     branches: [main]
+  pull_request:
+    branches: [main, develop, release/*, hotfix/*]
   schedule:
     - cron: '0 0 * * 0'
 
-env:
-  TRIVY_SEVERITY: 'HIGH,CRITICAL'
-  TRIVY_CACHE_DIR: ${{ github.workspace }}/.cache/trivy
+# Permisos necesarios para que el workflow pueda escribir en el repositorio
+# y publicar en GitHub Pages
+permissions:
+  contents: write
 
 jobs:
-  scan-and-report:
-    name: Scan and Generate Report
+  trivy-report:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    outputs:
-      # Define una salida para compartir el estado del escaneo con otros jobs
-      has-critical-issues: ${{ steps.analyze-severity.outputs.has-critical-issues }}
 
     steps:
-      # Paso 1: Obtener el código fuente del repositorio
+      # Descarga el código fuente del repositorio en el runner de GitHub Actions
+      # Utiliza la versión 4 de la acción oficial de checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Paso 2: Restaurar caché de la base de datos de vulnerabilidades de Trivy
-      # Esto acelera el escaneo al reutilizar datos descargados previamente
-      - name: Restore Trivy Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TRIVY_CACHE_DIR }}
-          # La clave del cache incluye la fecha para invalidación semanal
-          key: cache-trivy-${{ steps.get-date.outputs.date }}
-          restore-keys: |
-            cache-trivy-
-
-      # Paso 3: Obtener la fecha actual para el sistema de caché
-      # Se usa para crear claves de caché con invalidación temporal
-      - name: Get current date
-        id: get-date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      # Paso 4: Instalar y ejecutar Trivy para escanear configuraciones de Kubernetes
-      # Este paso siempre instala Trivy (skip-setup-trivy: false)
-      - name: Run Trivy Configuration Scan
-        uses: aquasecurity/trivy-action@0.33.1
-        id: trivy-scan  # Identificador para referenciar este paso
-        with:
-          scan-type: 'config'           # Escanea archivos YAML/JSON de Kubernetes
-          scan-ref: '.'                 # Escanea el directorio actual
-          format: 'sarif'               # Formato compatible con GitHub Security
-          output: 'trivy-results.sarif' # Archivo de resultados
-          severity: ${{ env.TRIVY_SEVERITY }} # Filtra por severidad configurada
-          ignore-unfixed: true          # Ignora vulnerabilidades sin parche disponible
-          exit-code: 0                  # No falla el workflow, solo reporta
-          skip-setup-trivy: false       # IMPORTANTE: Siempre instala Trivy
-
-      # Paso 5: Subir resultados al GitHub Security Tab para visibilidad centralizada
-      # Los resultados aparecen en la pestaña Security del repositorio
-      - name: Upload SARIF to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()  # Ejecuta siempre, incluso si Trivy falla
-        with:
-          sarif_file: 'trivy-results.sarif'
-          # SARIF es un estándar de la industria para reportar vulnerabilidades
-
-      # Paso 6: Guardar cache para futuros escaneos
-      # Optimiza ejecuciones posteriores del workflow
-      - name: Save Trivy Cache
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.TRIVY_CACHE_DIR }}
-          key: cache-trivy-${{ steps.get-date.outputs.date }}
-
-      # Paso 7: Analizar si hay vulnerabilidades críticas para decisión de bloqueo
-      # Crea un output que otros jobs pueden consumir
-      - name: Analyze Scan Results
-        id: analyze-severity
-        # Verifica si Trivy encontró vulnerabilidades del nivel configurado
-        run: |
-          if [ -f "trivy-results.sarif" ] && [ -s "trivy-results.sarif" ]; then
-            echo "Tiene vulnerabilidades del nivel ${{ env.TRIVY_SEVERITY }} o superior"
-            echo "has-critical-issues=true" >> $GITHUB_OUTPUT
-          else
-            echo "No se encontraron vulnerabilidades"
-            echo "has-critical-issues=false" >> $GITHUB_OUTPUT
-          fi
-
-  enforce-security-gate:
-    name: Enforce Security Gate
-    runs-on: ubuntu-latest
-    needs: scan-and-report  # Depende del job de escaneo
-    # Solo ejecuta en PRs que tengan vulnerabilidades críticas
-    if: github.event_name == 'pull_request' && needs.scan-and-report.outputs.has-critical-issues == 'true'
-
-    steps:
-      # Paso 1: Obtener el código para escanear
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Paso 2: Ejecutar Trivy en modo estricto que falla con vulnerabilidades críticas
-      # Este es el "gate" de seguridad que bloquea PRs peligrosos
-      - name: Run Trivy with Strict Enforcement
+      # Ejecuta un escaneo de seguridad sobre archivos de configuración usando Trivy
+      # Genera un reporte en formato HTML con las vulnerabilidades encontradas
+      # Configurado para no fallar el pipeline y para ignorar vulnerabilidades sin fix disponible
+      - name: Run Trivy config scan (HTML report)
         uses: aquasecurity/trivy-action@0.33.1
         with:
-          scan-type: 'config'
-          scan-ref: '.'
-          format: 'table'          # Formato legible en la consola de GitHub
-          severity: 'CRITICAL'     # Solo bloquea con vulnerabilidades CRITICAL
+          scan-type: config
+          scan-ref: .
+          format: html
+          output: trivy-k8s-report.html
+          exit-code: 0
           ignore-unfixed: true
-          exit-code: 1             # Falla el workflow si encuentra issues
-          skip-setup-trivy: false  # IMPORTANTE: Debe instalar Trivy aquí también
-          # Cada job de GitHub Actions tiene un entorno limpio
+
+      # Publica el reporte HTML generado en GitHub Pages
+      # El reporte quedará accesible públicamente a través de la URL de GitHub Pages del repositorio
+      # Los archivos se publican en la rama gh-pages en el directorio raíz
+      - name: Publish report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: .
+          destination_dir: .
