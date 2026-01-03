@@ -6,3 +6,4 @@ resources:
   - argocd
   - api
   - keycloak
+  - nginx
