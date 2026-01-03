@@ -18,7 +18,11 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:22.0.5
-          args: ["start"]
+          args:
+            - start
+            - --import-realm
+            - --health-enabled=true
+            - --metrics-enabled=true
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:
@@ -47,8 +51,6 @@ spec:
                   key: KEYCLOAK_DATABASE_PASSWORD
             - name: KC_HOSTNAME
               value: keycloak.local
-            - name: KEYCLOAK_IMPORT
-              value: /opt/keycloak/data/import/realms/realm.json
           envFrom:
             - configMapRef:
                 name: keycloak-config
@@ -66,16 +68,18 @@ spec:
               readOnly: true
           readinessProbe:
             httpGet:
-              path: /realms/master
-              port: 8080
-            initialDelaySeconds: 60
+              path: /health/ready
+              port: 9000
+            initialDelaySeconds: 120
             periodSeconds: 10
+            failureThreshold: 10
           livenessProbe:
             httpGet:
-              path: /realms/master
-              port: 8080
-            initialDelaySeconds: 60
+              path: /health/live
+              port: 9000
+            initialDelaySeconds: 120
             periodSeconds: 30
+            failureThreshold: 10
       volumes:
         - name: realm-config
           configMap:
