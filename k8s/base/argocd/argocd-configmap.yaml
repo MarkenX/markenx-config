@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-config
+  namespace: argocd
+data:
+  resource.customizations.health.k8s.keycloak.org_Keycloak: |
+    if obj.status and obj.status.ready == true then
+      return { status = "Healthy", message = "Keycloak Ready" }
+    end
+    return { status = "Progressing", message = "Waiting for Keycloak readiness" }
