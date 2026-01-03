@@ -25,5 +25,11 @@ spec:
   ignoreDifferences:
     - group: k8s.keycloak.org
       kind: Keycloak
+      managedFieldsManagers:
+        - keycloak-operator
+        - kubectl
+        - kubectl-client-side-apply
+        - argocd-controller
       jsonPointers:
         - /status
+        - /spec/unsupported
