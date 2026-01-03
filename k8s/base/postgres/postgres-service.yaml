@@ -4,10 +4,8 @@ metadata:
   name: postgres
   namespace: markenx
 spec:
-  type: ClusterIP
   selector:
     app: postgres
   ports:
-    - name: postgres
-      port: 5432
+    - port: 5432
       targetPort: 5432
