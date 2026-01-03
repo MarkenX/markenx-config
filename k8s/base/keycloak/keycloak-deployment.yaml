@@ -48,7 +48,7 @@ spec:
             - name: KC_HOSTNAME
               value: keycloak.local
             - name: KEYCLOAK_IMPORT
-              value: /opt/keycloak/data/import/realm.json
+              value: /opt/keycloak/data/import/realms/realm.json
           envFrom:
             - configMapRef:
                 name: keycloak-config
@@ -59,10 +59,10 @@ spec:
               name: https
           volumeMounts:
             - name: realm-config
-              mountPath: /opt/keycloak/data/import/
+              mountPath: /opt/keycloak/data/import/realms
               readOnly: true
             - name: scripts
-              mountPath: /opt/keycloak/data/import
+              mountPath: /opt/keycloak/data/scripts
               readOnly: true
           readinessProbe:
             httpGet:
@@ -79,7 +79,7 @@ spec:
       volumes:
         - name: realm-config
           configMap:
-              name: keycloak-realm-config
+            name: keycloak-realm-config
         - name: scripts
           configMap:
             name: keycloak-scripts
