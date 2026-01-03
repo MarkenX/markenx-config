@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: markenx/markenx-api:v3.0.1-alpha
+          image: markenx/markenx-api:v3.0.2-alpha
           ports:
             - containerPort: 8080
           envFrom:
