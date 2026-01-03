@@ -4,28 +4,26 @@ metadata:
   name: keycloak-operator
 rules:
   - apiGroups: ["k8s.keycloak.org"]
-    resources:
-      - keycloaks
-      - keycloaks/status
-      - keycloaks/finalizers
-      - keycloakrealmimports
-      - keycloakrealmimports/status
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+    resources: ["keycloaks", "keycloaks/status", "keycloaks/finalizers", "keycloakrealmimports", "keycloakrealmimports/status"]
+    verbs: ["*"]
   - apiGroups: [""]
-    resources:
-      - pods
-      - services
-      - services/finalizers
-      - endpoints
-      - persistentvolumeclaims
-      - events
-      - configmaps
-      - secrets
-      - serviceaccounts
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+    resources: ["pods", "services", "configmaps", "secrets", "serviceaccounts", "persistentvolumeclaims", "events"]
+    verbs: ["*"]
   - apiGroups: ["apps"]
-    resources: ["deployments", "daemonsets", "replicasets", "statefulsets"]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-  - apiGroups: ["monitoring.coreos.com"]
-    resources: ["servicemonitors"]
-    verbs: ["get", "create"]
+    resources: ["deployments", "statefulsets", "replicasets"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["*"]
+  - apiGroups: ["route.openshift.io"]  # Solo si usas OpenShift
+    resources: ["routes"]
+    verbs: ["*"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["*"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["*"]
