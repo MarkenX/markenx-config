@@ -21,4 +21,4 @@ configMapGenerator:
       - config/realm.json
 
 generatorOptions:
-  disableNameSuffixHash: false
+  disableNameSuffixHash: true
