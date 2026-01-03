@@ -19,14 +19,16 @@ require_script() {
 log "Starting Keycloak bootstrap sequence"
 
 require_script "$SCRIPTS_DIR/00-start-keycloak.sh"
+require_script "$SCRIPTS_DIR/10-setup-realm.sh"
 require_script "$SCRIPTS_DIR/20-setup-client.sh"
-# 10-setup-realm.sh solo si NO usas --import-realm
-# require_script "$SCRIPTS_DIR/10-setup-realm.sh"
 
-log "Starting Keycloak"
+log "Step 1/3: Starting Keycloak"
 /opt/keycloak/data/import/00-start-keycloak.sh
 
-log "Configuring clients"
+log "Step 2/3: Setting up realm"
+/opt/keycloak/data/import/10-setup-realm.sh
+
+log "Step 3/3: Setting up client"
 /opt/keycloak/data/import/20-setup-client.sh
 
 if [[ ! -f "$PID_FILE" ]]; then
@@ -47,5 +49,5 @@ terminate() {
 
 trap terminate SIGTERM SIGINT
 
-log "Entering wait loop"
+log "Bootstrap completed, entering wait"
 wait "$KEYCLOAK_PID"
