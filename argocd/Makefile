@@ -5,21 +5,27 @@ ARGOCD_NAMESPACE = argocd
 ARGOCD_MANIFEST  = https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ARGOCD_CM        = argocd-cm.yaml
 
-.PHONY: argocd-install argocd-status argocd-password argocd-port-forward argocd-delete
+.PHONY: install status get-password port-forward delete
 
 # =========================
 # ArgoCD
 # =========================
 
 install:
-	@echo "Installing ArgoCD..."
+	@echo "Creating namespace..."
 	kubectl create namespace $(ARGOCD_NAMESPACE) --dry-run=client -o yaml | kubectl apply -f -
-	@echo "Applying ArgoCD config (argocd-cm)..."
-	kubectl apply -f $(ARGOCD_CM)
+
 	@echo "Installing ArgoCD manifests..."
 	kubectl apply -n $(ARGOCD_NAMESPACE) -f $(ARGOCD_MANIFEST)
-	@echo "Waiting for ArgoCD to be ready..."
+
+	@echo "Waiting for ArgoCD server..."
 	kubectl rollout status deployment/argocd-server -n $(ARGOCD_NAMESPACE)
+
+	@echo "Applying ArgoCD config (argocd-cm)..."
+	kubectl apply -f $(ARGOCD_CM)
+
+	@echo "Restarting ArgoCD to reload config..."
+	kubectl rollout restart deployment -n $(ARGOCD_NAMESPACE)
 
 status:
 	kubectl get all -n $(ARGOCD_NAMESPACE)
