@@ -72,6 +72,12 @@ spec:
             - name: scripts
               mountPath: /opt/keycloak/data/scripts
               readOnly: true
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: 9000
+            failureThreshold: 60
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health/ready
