@@ -25,14 +25,13 @@ spec:
                 name: markenx-api-config
             - secretRef:
                 name: markenx-db-secret
-            - secretRef:
-                name: keycloak-client-secret
           env:
-            - name: KEYCLOAK_CREDENTIALS_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-client-secret
-                  key: client-secret
+            - name: KEYCLOAK_CLIENT_SECRET_FILE
+              value: /etc/secrets/keycloak/client-secret
+          volumeMounts:
+            - name: keycloak-secret
+              mountPath: /etc/secrets/keycloak
+              readOnly: true
           resources:
             requests:
               memory: "512Mi"
@@ -56,3 +55,10 @@ spec:
               path: /api/v1/actuator/health/liveness
               port: 8080
             periodSeconds: 20
+      volumes:
+        - name: keycloak-secret
+          secret:
+            secretName: keycloak-client-secret
+            items:
+              - key: client-secret
+                path: client-secret
