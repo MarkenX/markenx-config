@@ -18,14 +18,14 @@ install:
 	@echo "Installing ArgoCD manifests..."
 	kubectl apply -n $(ARGOCD_NAMESPACE) -f $(ARGOCD_MANIFEST)
 
-	@echo "Waiting for ArgoCD server..."
-	kubectl rollout status deployment/argocd-server -n $(ARGOCD_NAMESPACE)
+	@echo "Waiting for ArgoCD controller..."
+	kubectl rollout status deployment/argocd-application-controller -n $(ARGOCD_NAMESPACE)
 
 	@echo "Applying ArgoCD config (argocd-cm)..."
 	kubectl apply -f $(ARGOCD_CM)
 
-	@echo "Restarting ArgoCD to reload config..."
-	kubectl rollout restart deployment -n $(ARGOCD_NAMESPACE)
+	@echo "Restarting ArgoCD controller to reload config..."
+	kubectl rollout restart deployment/argocd-application-controller -n $(ARGOCD_NAMESPACE)
 
 status:
 	kubectl get all -n $(ARGOCD_NAMESPACE)
