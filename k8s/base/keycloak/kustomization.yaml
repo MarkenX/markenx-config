@@ -20,10 +20,14 @@ configMapGenerator:
       - scripts/01-start-keycloak.sh
       - scripts/10-setup-realm.sh
       - scripts/20-setup-client.sh
+    options:
+      disableNameSuffixHash: false
 
   - name: keycloak-realm-config
     files:
       - config/realm.json
+    options:
+      disableNameSuffixHash: true
 
 generatorOptions:
   disableNameSuffixHash: false
