@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - nginx-namespace.yaml
+  - nginx-ingress-class.yaml
   - nginx-cluster-role.yaml
   - nginx-cluster-role-binding.yaml
   - nginx-role.yaml
