@@ -27,5 +27,10 @@ spec:
       kind: Keycloak
       managedFieldsManagers:
         - keycloak-operator
+        - kubectl
+        - kubectl-client-side-apply
+        - argocd-controller
       jsonPointers:
         - /status
+      jqPathExpressions:
+        - .spec.unsupported.podTemplate.spec.containers[] | select(.name == "keycloak")
