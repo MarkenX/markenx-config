@@ -51,8 +51,9 @@ spec:
                 - sh
                 - -c
                 - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 6
 
           livenessProbe:
@@ -61,8 +62,9 @@ spec:
                 - sh
                 - -c
                 - pg_isready -U "$POSTGRES_USER"
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
             failureThreshold: 6
 
   volumeClaimTemplates:
