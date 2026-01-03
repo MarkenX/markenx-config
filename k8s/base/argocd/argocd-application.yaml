@@ -32,5 +32,4 @@ spec:
         - argocd-controller
       jsonPointers:
         - /status
-        - /spec/unsupported/podTemplate/spec/containers
-        - /spec/unsupported/podTemplate/spec/volumes
+        - /spec/unsupported
