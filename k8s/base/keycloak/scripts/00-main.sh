@@ -1,18 +1,51 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# Execute scripts in order
+SCRIPTS_DIR="/opt/keycloak/data/import"
+PID_FILE="/tmp/keycloak.pid"
+
+log() {
+  echo "[$(date -Iseconds)] $*"
+}
+
+require_script() {
+  local script="$1"
+  if [[ ! -x "$script" ]]; then
+    log "ERROR: Script not found or not executable: $script"
+    exit 1
+  fi
+}
+
+log "Starting Keycloak bootstrap sequence"
+
+require_script "$SCRIPTS_DIR/00-start-keycloak.sh"
+require_script "$SCRIPTS_DIR/20-setup-client.sh"
+# 10-setup-realm.sh solo si NO usas --import-realm
+# require_script "$SCRIPTS_DIR/10-setup-realm.sh"
+
+log "Starting Keycloak"
 /opt/keycloak/data/import/00-start-keycloak.sh
-/opt/keycloak/data/import/10-setup-realm.sh
+
+log "Configuring clients"
 /opt/keycloak/data/import/20-setup-client.sh
 
-# Wait for Keycloak process
-KEYCLOAK_PID=$(cat /tmp/keycloak.pid 2>/dev/null)
-if [ -n "$KEYCLOAK_PID" ]; then
-    echo "=== Keycloak running on PID: $KEYCLOAK_PID ==="
-    # Loop to keep the script alive while Keycloak is running
-    while kill -0 "$KEYCLOAK_PID" 2>/dev/null; do
-        sleep 5
-    done
-    echo "[INFO] Keycloak process terminated"
+if [[ ! -f "$PID_FILE" ]]; then
+  log "ERROR: Keycloak PID file not found"
+  exit 1
 fi
+
+KEYCLOAK_PID=$(cat "$PID_FILE")
+log "Keycloak running with PID: $KEYCLOAK_PID"
+
+terminate() {
+  log "Received termination signal, shutting down Keycloak..."
+  kill -TERM "$KEYCLOAK_PID" 2>/dev/null || true
+  wait "$KEYCLOAK_PID" 2>/dev/null || true
+  log "Keycloak stopped"
+  exit 0
+}
+
+trap terminate SIGTERM SIGINT
+
+log "Entering wait loop"
+wait "$KEYCLOAK_PID"
