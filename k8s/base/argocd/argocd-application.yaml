@@ -25,12 +25,7 @@ spec:
   ignoreDifferences:
     - group: k8s.keycloak.org
       kind: Keycloak
-      name: keycloak
-      namespace: markenx
+      managedFieldsManagers:
+        - keycloak-operator
       jsonPointers:
         - /status
-        - /metadata/uid
-        - /metadata/generation
-        - /metadata/resourceVersion
-        - /metadata/creationTimestamp
-        - /metadata/managedFields
