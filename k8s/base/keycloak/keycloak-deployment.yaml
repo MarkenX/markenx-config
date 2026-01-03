@@ -19,9 +19,6 @@ spec:
         - name: keycloak
           image: quay.io/keycloak/keycloak:22.0.5
           args:
-            - build
-            - --db=postgres
-            - --
             - start
             - --optimized
             - --import-realm
