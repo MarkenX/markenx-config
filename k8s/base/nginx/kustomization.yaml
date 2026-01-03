@@ -5,6 +5,8 @@ resources:
   - nginx-namespace.yaml
   - nginx-cluster-role.yaml
   - nginx-cluster-role-binding.yaml
+  - nginx-role.yaml
+  - nginx-role-binding.yaml
   - nginx-service-account.yaml
   - nginx-deployment.yaml
   - nginx-service.yaml
