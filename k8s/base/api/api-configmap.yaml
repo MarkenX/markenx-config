@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: markenx-api-config
+  namespace: markenx
 data:
   APP_NAME: markenx-api
   SERVER_PORT: "8080"
