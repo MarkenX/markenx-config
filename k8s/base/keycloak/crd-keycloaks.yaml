@@ -16,58 +16,14 @@ spec:
     - name: v2alpha1
       schema:
         openAPIV3Schema:
+          type: object
           properties:
             spec:
-              properties:
-                db:
-                  properties:
-                    passwordSecret:
-                      properties:
-                        key:
-                          type: string
-                        name:
-                          type: string
-                      type: object
-                    url:
-                      type: string
-                    usernameSecret:
-                      properties:
-                        key:
-                          type: string
-                        name:
-                          type: string
-                      type: object
-                    vendor:
-                      type: string
-                  type: object
-                hostname:
-                  properties:
-                    hostname:
-                      type: string
-                  type: object
-                http:
-                  properties:
-                    httpEnabled:
-                      type: boolean
-                  type: object
-                ingress:
-                  properties:
-                    enabled:
-                      type: boolean
-                  type: object
-                instances:
-                  type: integer
-                additionalOptions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                      value:
-                        type: string
               type: object
-          type: object
+              x-kubernetes-preserve-unknown-fields: true
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
       served: true
       storage: true
       subresources:
