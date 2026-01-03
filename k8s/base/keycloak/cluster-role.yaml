@@ -16,7 +16,7 @@ rules:
     resources: ["namespaces"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["networking.k8s.io"]
-    resources: ["ingresses"]
+    resources: ["ingresses", "networkpolicies"]
     verbs: ["*"]
   - apiGroups: ["route.openshift.io"]  # Solo si usas OpenShift
     resources: ["routes"]
