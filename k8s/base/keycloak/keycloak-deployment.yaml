@@ -20,6 +20,7 @@ spec:
           image: quay.io/keycloak/keycloak:22.0.5
           args:
             - start
+            - --optimized
             - --import-realm
             - --health-enabled=true
             - --metrics-enabled=true
