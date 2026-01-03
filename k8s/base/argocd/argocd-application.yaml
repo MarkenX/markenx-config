@@ -21,3 +21,14 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+  ignoreDifferences:
+    - group: k8s.keycloak.org
+      kind: Keycloak
+      name: keycloak
+      namespace: markenx
+      jsonPointers:
+        - /status
+        - /metadata/generation
+        - /metadata/resourceVersion
+        - /metadata/annotations/kubectl.kubernetes.io~
