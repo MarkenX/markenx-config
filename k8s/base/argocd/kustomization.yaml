@@ -7,3 +7,4 @@ namespace: argocd
 resources:
   - api-application.yaml
   - keycloak-application.yaml
+  - ngnix-application.yaml
