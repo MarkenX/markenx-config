@@ -3,6 +3,10 @@ kind: Keycloak
 metadata:
   name: keycloak
   namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-options: "Prune=false"
+    argocd.argoproj.io/compare-options: "IgnoreAggregatedRoles=true"
+    argocd.argoproj.io/hook: "Sync"
 spec:
   instances: 1
   db:

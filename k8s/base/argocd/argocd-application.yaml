@@ -29,6 +29,8 @@ spec:
       namespace: markenx
       jsonPointers:
         - /status
+        - /metadata/uid
         - /metadata/generation
         - /metadata/resourceVersion
-        - /metadata/annotations/kubectl.kubernetes.io~
+        - /metadata/creationTimestamp
+        - /metadata/managedFields
