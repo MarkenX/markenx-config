@@ -2,6 +2,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: keycloak-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 rules:
   - apiGroups: ["k8s.keycloak.org"]
     resources: ["keycloaks", "keycloaks/status", "keycloaks/finalizers", "keycloakrealmimports", "keycloakrealmimports/status"]

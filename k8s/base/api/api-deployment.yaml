@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: markenx-api
   namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   replicas: 2
   selector:
@@ -23,6 +25,14 @@ spec:
                 name: markenx-api-config
             - secretRef:
                 name: markenx-db-secret
+            - secretRef:
+                name: keycloak-client-secret
+          env:
+            - name: KEYCLOAK_CREDENTIALS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-client-secret
+                  key: client-secret
           resources:
             requests:
               memory: "512Mi"

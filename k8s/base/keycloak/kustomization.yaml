@@ -10,26 +10,11 @@ resources:
   - cluster-role.yaml
   - cluster-role-binding.yaml
   - deployment-operator.yaml
+  # keycloak-secret.yaml is NOT included - the operator creates keycloak-initial-admin automatically
   - keycloak-instance.yaml
-  - keycloak-application.yaml
+  - keycloak-realm-import.yaml
+  - keycloak-client-secret.yaml
+  - keycloak-ingress.yaml
   - postgres
 
-configMapGenerator:
-  - name: keycloak-scripts
-    files:
-      - scripts/common-logging.sh
-      - scripts/00-main.sh
-      - scripts/01-start-keycloak.sh
-      - scripts/10-setup-realm.sh
-      - scripts/20-setup-client.sh
-    options:
-      disableNameSuffixHash: false
 
-  - name: keycloak-realm-config
-    files:
-      - config/realm.json
-    options:
-      disableNameSuffixHash: true
-
-generatorOptions:
-  disableNameSuffixHash: false

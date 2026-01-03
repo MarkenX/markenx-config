@@ -4,7 +4,7 @@ metadata:
   name: keycloak
   namespace: markenx
   annotations:
-    argocd.argoproj.io/skip-health: "true"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   instances: 1
   db:
@@ -20,21 +20,8 @@ spec:
     hostname: keycloak.local
   http:
     httpEnabled: true
-  keycloakDeploymentOverrides:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: keycloak
-              args:
-                - start
-                - --optimized
-                - --import-realm
-              volumeMounts:
-                - name: realm-config
-                  mountPath: /opt/keycloak/data/import/realms
-                  readOnly: true
-          volumes:
-            - name: realm-config
-              configMap:
-                name: keycloak-realm-config
+  additionalOptions:
+    - name: health-enabled
+      value: "true"
+  ingress:
+    enabled: false

@@ -5,6 +5,8 @@ metadata:
   namespace: markenx
   labels:
     app: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   serviceName: postgres
   replicas: 1

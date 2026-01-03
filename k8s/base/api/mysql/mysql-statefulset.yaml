@@ -3,6 +3,8 @@ kind: StatefulSet
 metadata:
   name: mysql
   namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   serviceName: mysql
   replicas: 1
