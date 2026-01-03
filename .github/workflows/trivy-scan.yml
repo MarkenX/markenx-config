@@ -1,0 +1,117 @@
+name: Trivy Scan Kubernetes Manifests
+# Nombre que aparece en la interfaz de GitHub Actions
+
+on:
+  # Se ejecuta en PRs hacia las ramas principales de GitFlow
+  pull_request:
+    branches: [main, develop, release/*, hotfix/*]
+  # Se ejecuta en pushes directos a main (deployments, merges)
+  push:
+    branches: [main]
+  # Actualiza la base de datos de vulnerabilidades semanalmente
+  schedule:
+    - cron: '0 0 * * 0'  # Cada domingo a medianoche UTC
+
+env:
+  # Define severidades que se consideran para bloqueo de PRs
+  TRIVY_SEVERITY: 'HIGH,CRITICAL'
+  # Directorio para cache de base de datos de Trivy
+  TRIVY_CACHE_DIR: ${{ github.workspace }}/.cache/trivy
+
+jobs:
+  scan-and-report:
+    name: Scan and Generate Report
+    runs-on: ubuntu-latest
+    # Permisos mínimos necesarios para seguridad
+    permissions:
+      contents: read  # Necesario para checkout del código
+      security-events: write  # Necesario para subir resultados al Security Tab
+    outputs:
+      # Output que se usa en el job de enforcement para decidir si bloquear
+      has-critical-issues: ${{ steps.analyze-severity.outputs.has-critical-issues }}
+
+    steps:
+      # Paso 1: Obtener el código del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Usa la versión más reciente para mejoras de seguridad y performance
+
+      # Paso 2: Cache para base de datos de vulnerabilidades
+      - name: Restore Trivy Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.TRIVY_CACHE_DIR }}  # Ruta definida en variables de entorno
+          key: trivy-db-${{ hashFiles('**/trivy.yaml') }}
+          # Hash del archivo de configuración para invalidar cache cuando cambia
+          restore-keys: |
+            trivy-db-  # Cache parcial si no encuentra exact match
+
+      # Paso 3: Ejecutar escaneo de configuración de Kubernetes
+      - name: Run Trivy Configuration Scan (Report Only)
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: 'config'  # Escanea archivos YAML/JSON de Kubernetes
+          scan-ref: './k8s'  # Carpeta que se va a escanear
+          format: 'sarif'  # Formato estándar para herramientas de seguridad
+          output: 'trivy-results.sarif'  # Archivo de salida
+          severity: ${{ env.TRIVY_SEVERITY }}  # Filtra por severidad
+          ignore-unfixed: true  # Ignora vulnerabilidades sin fix disponible
+          trivy-config: 'trivy.yaml'  # Configuración externa centralizada
+          skip-setup-trivy: false  # Instala/actualiza Trivy automáticamente
+
+      # Paso 4: Integrar resultados en GitHub Security Tab
+      - name: Upload SARIF to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          # SARIF es un estándar que GitHub interpreta para mostrar vulnerabilidades
+          # en la pestaña Security > Code scanning alerts
+
+      # Paso 5: Guardar cache para futuros workflows
+      - name: Save Trivy Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.TRIVY_CACHE_DIR }}
+          key: trivy-db-${{ hashFiles('**/trivy.yaml') }}
+          # Misma key que en restore para consistencia
+
+      # Paso 6: Analizar resultados para determinar si hay issues críticos
+      - name: Analyze Scan Severity for Enforcement
+        id: analyze-severity
+        # Este paso crea un output que el job de enforcement puede consumir
+        run: |
+          if [ -f "trivy-results.sarif" ]; then
+            # Si existe el archivo SARIF, significa que Trivy encontró vulnerabilidades
+            echo "has-critical-issues=true" >> $GITHUB_OUTPUT
+          else
+            # Sin archivo SARIF = no vulnerabilidades en el rango de severidad
+            echo "has-critical-issues=false" >> $GITHUB_OUTPUT
+          fi
+
+  enforce-security-gate:
+    name: Enforce Security Gate
+    runs-on: ubuntu-latest
+    # Depende del job de scan para obtener el resultado
+    needs: scan-and-report
+    # Solo se ejecuta en PRs y cuando hay issues críticos
+    if: github.event_name == 'pull_request' && needs.scan-and-report.outputs.has-critical-issues == 'true'
+    # Condicional que previene bloqueos en pushes directos o cuando no hay issues
+
+    steps:
+      # Paso 1: Checkout necesario para ejecutar Trivy
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Ejecutar Trivy con salida estricta que falla el workflow
+      - name: Run Trivy with Strict Enforcement
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'  # Formato legible en la consola de GitHub Actions
+          severity: 'CRITICAL'  # Solo CRITICAL bloquea el PR (más estricto que el report)
+          ignore-unfixed: true
+          exit-code: 1  # Hace que el workflow falle si encuentra issues
+          skip-setup-trivy: true  # Reusa Trivy instalado en el job anterior
+          # Esta ejecución fallará el PR si encuentra vulnerabilidades CRITICAL
+          # proporcionando feedback inmediato al desarrollador

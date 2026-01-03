@@ -1,0 +1,4 @@
+format: sarif
+severity: HIGH,CRITICAL
+ignore-unfixed: true
+vuln-type: os,library
