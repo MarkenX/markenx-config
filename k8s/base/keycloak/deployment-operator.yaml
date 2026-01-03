@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-operator
+  namespace: markenx
+  labels:
+    app: keycloak-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-operator
+  template:
+    metadata:
+      labels:
+        app: keycloak-operator
+    spec:
+      serviceAccountName: keycloak-operator
+      containers:
+        - name: operator
+          image: quay.io/keycloak/keycloak-operator:26.4.7
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: WATCH_NAMESPACE
+              value: markenx
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: keycloak-operator
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

@@ -1,0 +1,37 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  namespace: markenx
+spec:
+  instances: 1
+  db:
+    vendor: postgres
+    url: jdbc:postgresql://postgres:5432/keycloak
+    usernameSecret:
+      name: postgres-secret
+      key: POSTGRES_USER
+    passwordSecret:
+      name: postgres-secret
+      key: POSTGRES_PASSWORD
+  hostname:
+    hostname: keycloak.local
+  http:
+    httpEnabled: true
+  unsupported:
+    podTemplate:
+      spec:
+        containers:
+          - name: keycloak
+            args:
+              - start
+              - --optimized
+              - --import-realm
+            volumeMounts:
+              - name: realm-config
+                mountPath: /opt/keycloak/data/import/realms
+                readOnly: true
+        volumes:
+          - name: realm-config
+            configMap:
+              name: keycloak-realm-config

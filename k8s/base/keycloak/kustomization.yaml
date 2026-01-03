@@ -4,10 +4,13 @@ kind: Kustomization
 namespace: markenx
 
 resources:
-  - keycloak-configmap.yaml
-  - keycloak-deployment.yaml
-  - keycloak-service.yaml
-  - keycloak-secret.yaml
+  - service-account.yaml
+  - cluster-role.yaml
+  - cluster-role-binding.yaml
+  - deployment-operator.yaml
+  - crd-keycloaks.yaml
+  - crd-keycloakrealmimports.yaml
+  - keycloak-instance.yaml
 
 configMapGenerator:
   - name: keycloak-scripts
