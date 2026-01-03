@@ -1,7 +1,7 @@
 # =========================
 # Variables
 # =========================
-K8S_DIR = base
+K8S_DIR = base/argocd
 APP_NAME = markenx-api
 
 # =========================
@@ -10,19 +10,7 @@ APP_NAME = markenx-api
 
 .PHONY: deploy delete status logs restart deploy-crds deploy-resources
 
-deploy: deploy-crds deploy-resources
-
-deploy-crds:
-	@echo "Applying CRDs first..."
-	kubectl apply -k $(K8S_DIR)/keycloak --selector=apiextensions.k8s.io/v1=CustomResourceDefinition || \
-	kubectl apply -f $(K8S_DIR)/keycloak/crd-keycloaks.yaml -f $(K8S_DIR)/keycloak/crd-keycloakrealmimports.yaml
-	@echo "Waiting for CRDs to be established..."
-	kubectl wait --for condition=established --timeout=60s crd/keycloaks.k8s.keycloak.org || true
-	kubectl wait --for condition=established --timeout=60s crd/keycloakrealmimports.k8s.keycloak.org || true
-	@echo "CRDs are ready!"
-
-deploy-resources:
-	@echo "Applying all resources..."
+deploy:
 	kubectl apply -k $(K8S_DIR)
 
 delete:
