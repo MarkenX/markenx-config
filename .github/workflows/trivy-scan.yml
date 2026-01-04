@@ -3,7 +3,7 @@
 # - Push a la rama main
 # - Pull requests hacia main, develop, y ramas de release/hotfix
 # - Programación semanal cada domingo a medianoche
-name: Trivy Kubernetes Manifest Report
+name: Trivy Kubernetes Manifests Report
 
 on:
   push:
@@ -29,14 +29,15 @@ jobs:
         uses: actions/checkout@v4
 
       # Ejecuta un escaneo de seguridad sobre archivos de configuración usando Trivy
-      # Genera un reporte en formato HTML con las vulnerabilidades encontradas
+      # Genera un reporte en formato HTML utilizando la plantilla contrib incluida en Trivy
       # Configurado para no fallar el pipeline y para ignorar vulnerabilidades sin fix disponible
       - name: Run Trivy config scan (HTML report)
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: config
           scan-ref: .
-          format: html
+          format: template
+          template: "@contrib/html.tpl"
           output: trivy-k8s-report.html
           exit-code: 0
           ignore-unfixed: true
@@ -50,4 +51,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: .
-          destination_dir: .
