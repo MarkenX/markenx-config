@@ -28,8 +28,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Descarga la plantilla HTML oficial de Trivy desde el repositorio de GitHub
+      # Crea un directorio para almacenar la plantilla y utiliza curl para obtenerla
+      # Esta plantilla es necesaria para generar el reporte con el formato HTML adecuado
+      - name: Download Trivy HTML template
+        run: |
+          mkdir -p trivy-templates
+          curl -sSL \
+            https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl \
+            -o trivy-templates/html.tpl
+
       # Ejecuta un escaneo de seguridad sobre archivos de configuración usando Trivy
-      # Genera un reporte en formato HTML utilizando la plantilla contrib incluida en Trivy
+      # Genera un reporte en formato HTML utilizando la plantilla descargada previamente
       # Configurado para no fallar el pipeline y para ignorar vulnerabilidades sin fix disponible
       - name: Run Trivy config scan (HTML report)
         uses: aquasecurity/trivy-action@0.33.1
@@ -37,7 +47,7 @@ jobs:
           scan-type: config
           scan-ref: .
           format: template
-          template: "@contrib/html.tpl"
+          template: trivy-templates/html.tpl
           output: trivy-k8s-report.html
           exit-code: 0
           ignore-unfixed: true
