@@ -52,7 +52,7 @@ jobs:
           scan-type: config
           scan-ref: .
           format: template
-          template: "@trivy-templates/k8s-html.tpl"
+          template: "@trivy-templates/html.tpl"
           output: site/index.html
           exit-code: 0
           ignore-unfixed: true
