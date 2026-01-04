@@ -17,9 +17,12 @@
 <h1>Trivy Kubernetes Configuration Report</h1>
 
 {{ range . }}
+  {{ $file := .Target }}
+
   {{ if .Misconfigurations }}
     {{ range .Misconfigurations }}
-      <h2>{{ .FilePath }}</h2>
+      <h2>{{ $file }}</h2>
+
       <p>
         <strong>Severity:</strong>
         <span class="{{ .Severity }}">{{ .Severity }}</span><br>
