@@ -38,8 +38,13 @@ jobs:
             https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl \
             -o trivy-templates/html.tpl
 
+      # Crea el directorio que contendrá el sitio web a publicar
+      # Este directorio será usado para almacenar el reporte HTML generado
+      - name: Prepare site directory
+        run: mkdir -p site
+
       # Ejecuta un escaneo de seguridad sobre archivos de configuración usando Trivy
-      # Genera un reporte en formato HTML utilizando la plantilla descargada previamente
+      # Genera un reporte en formato HTML como index.html dentro del directorio site
       # Configurado para no fallar el pipeline y para ignorar vulnerabilidades sin fix disponible
       - name: Run Trivy config scan (HTML report)
         uses: aquasecurity/trivy-action@0.33.1
@@ -48,18 +53,16 @@ jobs:
           scan-ref: .
           format: template
           template: trivy-templates/html.tpl
-          output: index.html
+          output: site/index.html
           exit-code: 0
           ignore-unfixed: true
 
       # Publica el reporte HTML generado en GitHub Pages
       # El reporte quedará accesible públicamente a través de la URL de GitHub Pages del repositorio
-      # Los archivos se publican en la rama gh-pages en el directorio raíz
+      # Solo se publica el contenido del directorio site en la rama gh-pages
       - name: Publish report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: .
-          exclude_assets: |
-            trivy-templates/**
+          publish_dir: site
