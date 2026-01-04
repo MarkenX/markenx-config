@@ -48,7 +48,7 @@ jobs:
           scan-ref: .
           format: template
           template: trivy-templates/html.tpl
-          output: trivy-k8s-report.html
+          output: index.html
           exit-code: 0
           ignore-unfixed: true
 
