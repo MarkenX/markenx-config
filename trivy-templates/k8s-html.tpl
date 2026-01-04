@@ -2,20 +2,21 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Trivy Kubernetes Report</title>
+  <title>Trivy Kubernetes Config Report</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h2 { border-bottom: 1px solid #ddd; }
-    .HIGH { color: orange; }
     .CRITICAL { color: red; }
+    .HIGH { color: orange; }
     .MEDIUM { color: goldenrod; }
+    .LOW { color: gray; }
   </style>
 </head>
 <body>
 
 <h1>Trivy Kubernetes Configuration Report</h1>
 
-{{ range .Results }}
+{{ range . }}
   {{ if .Misconfigurations }}
     {{ range .Misconfigurations }}
       <h2>{{ .FilePath }}</h2>
