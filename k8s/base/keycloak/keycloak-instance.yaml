@@ -1,0 +1,27 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  instances: 1
+  db:
+    vendor: postgres
+    url: jdbc:postgresql://postgres:5432/keycloak
+    usernameSecret:
+      name: postgres-secret
+      key: POSTGRES_USER
+    passwordSecret:
+      name: postgres-secret
+      key: POSTGRES_PASSWORD
+  hostname:
+    hostname: keycloak.local
+  http:
+    httpEnabled: true
+  additionalOptions:
+    - name: health-enabled
+      value: "true"
+  ingress:
+    enabled: false

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: markenx-api-swagger
+  namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: markenx-api.local
+      http:
+        paths:
+          - path: /swagger-ui(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: markenx-api
+                port:
+                  number: 80

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: markenx-api-config
+  namespace: markenx
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  APP_NAME: markenx-api
+  SERVER_PORT: "8080"
+  CONTEXT_PATH: /api/v1
+  SPRING_PROFILES_ACTIVE: prod
+
+  # Database configuration
+  DB_HOST: mysql
+  DB_PORT: "3306"
+  DB_NAME: markenx
+
+  # Keycloak configuration (Spring Security OAuth2/OIDC)
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak-service:8080/realms/markenx
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak-service:8080/realms/markenx/protocol/openid-connect/certs
+
+  # Keycloak client configuration (if using Keycloak adapter)
+  KEYCLOAK_REALM: markenx
+  KEYCLOAK_AUTH_SERVER_URL: http://keycloak-service:8080
+  KEYCLOAK_RESOURCE: markenx-api
+  KEYCLOAK_SSL_REQUIRED: none
+  KEYCLOAK_BEARER_ONLY: "false"
+  KEYCLOAK_USE_RESOURCE_ROLE_MAPPINGS: "true"
+
