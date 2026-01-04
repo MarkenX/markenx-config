@@ -20,13 +20,14 @@
   {{ $file := .Target }}
 
   {{ if .Misconfigurations }}
-    {{ range .Misconfigurations }}
-      <h2>{{ $file }}</h2>
+    <h2>{{ $file }}</h2>
 
+    {{ range .Misconfigurations }}
       <p>
+        <strong>ID:</strong> {{ .ID }}<br>
+        <strong>Title:</strong> {{ .Title }}<br>
         <strong>Severity:</strong>
         <span class="{{ .Severity }}">{{ .Severity }}</span><br>
-        <strong>Resource:</strong> {{ .Resource }}<br>
         <strong>Message:</strong> {{ .Message }}
       </p>
     {{ end }}
