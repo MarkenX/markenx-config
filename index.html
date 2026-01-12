@@ -51,7 +51,7 @@
       }
       a.toggle-more-links { cursor: pointer; }
     </style>
-    <title>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-11 01:39:48.973832922 +0000 UTC m=+2.705391226 </title>
+    <title>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 06:54:20.707329654 +0000 UTC m=+3.070550672 </title>
     <script>
       window.onload = function() {
         document.querySelectorAll('td.links').forEach(function(linkCell) {
@@ -81,7 +81,7 @@
     </script>
   </head>
   <body>
-    <h1>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-11 01:39:48.97385835 +0000 UTC m=+2.705416653</h1>
+    <h1>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 06:54:20.70734879 +0000 UTC m=+3.070569808</h1>
     <table>
       <tr class="group-header"><th colspan="6">kubernetes</th></tr>
       <tr><th colspan="6">No Vulnerabilities found</th></tr>
@@ -191,6 +191,9 @@
           </br>
         </td>
       </tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
       <tr class="group-header"><th colspan="6">kubernetes</th></tr>
       <tr><th colspan="6">No Vulnerabilities found</th></tr>
       <tr><th colspan="6">No Misconfigurations found</th></tr>
@@ -506,6 +509,66 @@
           Role &#39;ingress-nginx&#39; should not have access to resources [&#34;services&#34;, &#34;endpoints&#34;, &#34;endpointslices&#34;, &#34;networkpolicies&#34;, &#34;ingresses&#34;] for verbs [&#34;create&#34;, &#34;update&#34;, &#34;patch&#34;, &#34;delete&#34;, &#34;deletecollection&#34;, &#34;impersonate&#34;, &#34;*&#34;]
           <br>
             <a href="https://avd.aquasec.com/misconfig/ksv056">https://avd.aquasec.com/misconfig/ksv056</a>
+          </br>
+        </td>
+      </tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr class="sub-header">
+        <th>Type</th>
+        <th>Misconf ID</th>
+        <th>Check</th>
+        <th>Severity</th>
+        <th>Message</th>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="misconf-type">Kubernetes Security Check</td>
+        <td>KSV014</td>
+        <td class="misconf-check">Root file system is not read-only</td>
+        <td class="severity">HIGH</td>
+        <td class="link" data-more-links="off"  style="white-space:normal;">
+          Container &#39;operator&#39; of Deployment &#39;trivy-operator&#39; should set &#39;securityContext.readOnlyRootFilesystem&#39; to true
+          <br>
+            <a href="https://avd.aquasec.com/misconfig/ksv014">https://avd.aquasec.com/misconfig/ksv014</a>
+          </br>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="misconf-type">Kubernetes Security Check</td>
+        <td>KSV118</td>
+        <td class="misconf-check">Default security context configured</td>
+        <td class="severity">HIGH</td>
+        <td class="link" data-more-links="off"  style="white-space:normal;">
+          container trivy-operator in trivy namespace is using the default security context
+          <br>
+            <a href="https://avd.aquasec.com/misconfig/ksv118">https://avd.aquasec.com/misconfig/ksv118</a>
+          </br>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="misconf-type">Kubernetes Security Check</td>
+        <td>KSV118</td>
+        <td class="misconf-check">Default security context configured</td>
+        <td class="severity">HIGH</td>
+        <td class="link" data-more-links="off"  style="white-space:normal;">
+          deployment trivy-operator in trivy namespace is using the default security context, which allows root privileges
+          <br>
+            <a href="https://avd.aquasec.com/misconfig/ksv118">https://avd.aquasec.com/misconfig/ksv118</a>
           </br>
         </td>
       </tr>
