@@ -6,16 +6,20 @@ metadata:
     app: trivy-operator
 rules:
   # Regla 1: Leer y observar recursos del cluster
-  - apiGroups: [""]  # Grupo de API core (v1)
-    resources: ["pods", "replicationcontrollers", "services"]
+  - apiGroups: [""]
+    resources:
+      - "pods"
+      - "replicationcontrollers"
+      - "services"
+      - "configmaps"
     verbs: ["get", "list", "watch"]
 
-  # Regla 2: Leer recursos de apps y batch (Deployments, Jobs, etc.)
+  # Regla 2: Leer recursos de apps y batch
   - apiGroups: ["apps", "batch"]
     resources: ["deployments", "daemonsets", "statefulsets", "replicasets", "jobs", "cronjobs"]
     verbs: ["get", "list", "watch"]
 
-  # Regla 3: Gestionar los Custom Resources propios (CRUD de reportes)
+  # Regla 3: Gestionar los Custom Resources propios
   - apiGroups: ["aquasecurity.github.io"]
     resources: ["vulnerabilityreports", "configauditreports"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -24,3 +28,13 @@ rules:
   - apiGroups: [""]
     resources: ["namespaces"]
     verbs: ["get", "list"]
+
+  # Regla 5: Crear Jobs para escaneos
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create", "delete"]
+
+  # Regla 6: Ver eventos
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
