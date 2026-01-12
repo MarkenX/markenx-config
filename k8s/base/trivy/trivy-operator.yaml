@@ -185,7 +185,7 @@ spec:
         fsGroup: 10000
       containers:
         - name: trivy-operator
-          image: ghcr.io/aquasecurity/trivy-operator:0.29.0
+          image: ghcr.io/aquasecurity/trivy-operator:0.23.1
           imagePullPolicy: IfNotPresent
           args:
             - --health-probe-bind-address=:8081
@@ -203,7 +203,7 @@ spec:
             - name: OPERATOR_SCAN_JOB_TTL
               value: ""
             - name: OPERATOR_SCANNER_TRIVY_IMAGE
-              value: "ghcr.io/aquasecurity/trivy:0.62.0"
+              value: "ghcr.io/aquasecurity/trivy:0.53.0"
             - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
               value: "true"
             - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
