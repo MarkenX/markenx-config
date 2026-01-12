@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator
+  namespace: trivy
+  labels:
+    app: trivy-operator
+    component: controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trivy-operator
+  template:
+    metadata:
+      labels:
+        app: trivy-operator
+        component: controller
+    spec:
+      serviceAccountName: trivy-operator  # Usa la cuenta de servicio definida
+      containers:
+        - name: operator
+          image: ghcr.io/aquasecurity/trivy-operator:0.18.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          # Variables de entorno para configuración
+          env:
+            - name: OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_NAME
+              value: "trivy-operator"
+            - name: TRIVY_IGNORE_UNFIXED
+              value: "true"  # Ignora vulnerabilidades sin parche disponible
+            - name: TRIVY_SEVERITY
+              value: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"  # Todas las severidades
+            - name: TRIVY_TIMEOUT
+              value: "5m"  # Timeout por escaneo
+          # Configuración de recursos (evita que consuma demasiado CPU/Memoria)
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          # Health checks
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      # Tolerancias y afinidad para control de scheduling
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
