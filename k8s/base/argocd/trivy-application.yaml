@@ -1,9 +1,11 @@
-# argocd-apps/trivy-application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: trivy
+  name: trivy-operator
   namespace: argocd
+  annotations:
+    # Deploy Trivy first so it can scan other applications as they deploy
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
 
@@ -14,7 +16,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: security-tools
+    namespace: trivy-system
 
   syncPolicy:
     automated:
@@ -22,10 +24,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-
-  # Health checks personalizadas para Trivy
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers:
-        - /spec/replicas
+      - ServerSideApply=true

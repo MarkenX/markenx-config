@@ -1,0 +1,273 @@
+---
+# ServiceAccount for Trivy Operator
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+---
+# ConfigMap for Trivy Operator configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+data:
+  # Vulnerability scanner configuration
+  vulnerabilityReports.scanner: "Trivy"
+
+  # Scan only the markenx namespace (where markenx-api runs)
+  # To scan all namespaces, remove this line
+  targetNamespaces: "markenx"
+
+  # Severity levels to include in reports
+  trivy.severity: "CRITICAL,HIGH,MEDIUM"
+
+  # Ignore unfixed vulnerabilities
+  trivy.ignoreUnfixed: "false"
+
+  # Scan timeout
+  trivy.timeout: "5m0s"
+
+  # Resource configuration for scan jobs
+  trivy.resources.requests.cpu: "100m"
+  trivy.resources.requests.memory: "100M"
+  trivy.resources.limits.cpu: "500m"
+  trivy.resources.limits.memory: "500M"
+
+  # Scan images for OS and library vulnerabilities
+  trivy.dbRepository: "ghcr.io/aquasecurity/trivy-db"
+
+  # Enable scanning for secrets
+  scanJob.podTemplateLabels: ""
+---
+# ConfigMap for Trivy Operator policies
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trivy-operator-policies-config
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+data: {}
+---
+# ClusterRole for Trivy Operator
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trivy-operator
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+rules:
+  # Core resources
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "replicationcontrollers", "resourcequotas", "limitranges"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets", "serviceaccounts", "services"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+  # Apps resources
+  - apiGroups: ["apps"]
+    resources: ["deployments", "daemonsets", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  # Batch resources
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  # Networking
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "networkpolicies"]
+    verbs: ["get", "list", "watch"]
+  # RBAC
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+    verbs: ["get", "list", "watch"]
+  # Aqua Security CRDs
+  - apiGroups: ["aquasecurity.github.io"]
+    resources: ["vulnerabilityreports", "exposedsecretreports", "configauditreports", "rbacassessmentreports", "infraassessmentreports", "clustercompliancereports", "clusterconfigauditreports", "clusterinfraassessmentreports", "clusterrbacassessmentreports", "sbomreports", "clustersbomreports", "clustervulnerabilityreports"]
+    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
+---
+# ClusterRoleBinding for Trivy Operator
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: trivy-operator
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-operator
+subjects:
+  - kind: ServiceAccount
+    name: trivy-operator
+    namespace: trivy-system
+---
+# Role for Trivy Operator in its own namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "get", "list", "watch", "update", "delete"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["create", "get", "update"]
+---
+# RoleBinding for Trivy Operator in its own namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: trivy-operator
+subjects:
+  - kind: ServiceAccount
+    name: trivy-operator
+    namespace: trivy-system
+---
+# Deployment for Trivy Operator
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: trivy-operator
+      app.kubernetes.io/instance: trivy-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: trivy-operator
+        app.kubernetes.io/instance: trivy-operator
+    spec:
+      serviceAccountName: trivy-operator
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+      containers:
+        - name: trivy-operator
+          image: ghcr.io/aquasecurity/trivy-operator:0.24.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --health-probe-bind-address=:8081
+            - --metrics-bind-address=:8080
+            - --leader-elect
+          env:
+            - name: OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_TARGET_NAMESPACES
+              value: "markenx"
+            - name: OPERATOR_LOG_DEV_MODE
+              value: "false"
+            - name: OPERATOR_SCAN_JOB_TTL
+              value: ""
+            - name: OPERATOR_SCANNER_TRIVY_IMAGE
+              value: "ghcr.io/aquasecurity/trivy:0.58.0"
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_EXPOSED_SECRET_SCANNER_ENABLED
+              value: "true"
+            - name: OPERATOR_BATCH_DELETE_LIMIT
+              value: "10"
+            - name: OPERATOR_BATCH_DELETE_DELAY
+              value: "10s"
+          ports:
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: health
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            privileged: false
+---
+# Service for metrics exposure (optional, for Prometheus)
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+  labels:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 8080
+      targetPort: metrics
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: trivy-operator
+    app.kubernetes.io/instance: trivy-operator
