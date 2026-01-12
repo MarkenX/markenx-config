@@ -8,4 +8,3 @@ resources:
   - api-application.yaml
   - keycloak-application.yaml
   - ngnix-application.yaml
-  - trivy-application.yaml
