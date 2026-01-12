@@ -96,9 +96,19 @@ rules:
   - apiGroups: ["rbac.authorization.k8s.io"]
     resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
     verbs: ["get", "list", "watch"]
-  # Aqua Security CRDs - Only VulnerabilityReports
+  # Aqua Security CRDs - All required by operator
   - apiGroups: ["aquasecurity.github.io"]
-    resources: ["vulnerabilityreports"]
+    resources:
+      - vulnerabilityreports
+      - exposedsecretreports
+      - sbomreports
+      - configauditreports
+      - infraassessmentreports
+      - rbacassessmentreports
+      - clustersbomreports
+      - clusterconfigauditreports
+      - clusterinfraassessmentreports
+      - clusterrbacassessmentreports
     verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
 ---
 # ClusterRoleBinding for Trivy Operator
