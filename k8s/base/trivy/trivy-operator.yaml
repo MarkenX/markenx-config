@@ -96,9 +96,9 @@ rules:
   - apiGroups: ["rbac.authorization.k8s.io"]
     resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
     verbs: ["get", "list", "watch"]
-  # Aqua Security CRDs
+  # Aqua Security CRDs - Only VulnerabilityReports
   - apiGroups: ["aquasecurity.github.io"]
-    resources: ["vulnerabilityreports", "exposedsecretreports", "configauditreports", "rbacassessmentreports", "infraassessmentreports", "clustercompliancereports", "clusterconfigauditreports", "clusterinfraassessmentreports", "clusterrbacassessmentreports", "sbomreports", "clustersbomreports", "clustervulnerabilityreports"]
+    resources: ["vulnerabilityreports"]
     verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
 ---
 # ClusterRoleBinding for Trivy Operator
@@ -204,12 +204,22 @@ spec:
               value: ""
             - name: OPERATOR_SCANNER_TRIVY_IMAGE
               value: "ghcr.io/aquasecurity/trivy:0.53.0"
-            - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
-              value: "true"
+            # Only enable vulnerability scanner
             - name: OPERATOR_VULNERABILITY_SCANNER_ENABLED
               value: "true"
+            # Disable all other scanners to avoid CRD dependencies
+            - name: OPERATOR_CONFIG_AUDIT_SCANNER_ENABLED
+              value: "false"
             - name: OPERATOR_EXPOSED_SECRET_SCANNER_ENABLED
-              value: "true"
+              value: "false"
+            - name: OPERATOR_SBOM_GENERATION_ENABLED
+              value: "false"
+            - name: OPERATOR_CLUSTER_COMPLIANCE_ENABLED
+              value: "false"
+            - name: OPERATOR_INFRA_ASSESSMENT_SCANNER_ENABLED
+              value: "false"
+            - name: OPERATOR_RBAC_ASSESSMENT_SCANNER_ENABLED
+              value: "false"
             - name: OPERATOR_BATCH_DELETE_LIMIT
               value: "10"
             - name: OPERATOR_BATCH_DELETE_DELAY
