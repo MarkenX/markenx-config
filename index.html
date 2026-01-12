@@ -51,7 +51,7 @@
       }
       a.toggle-more-links { cursor: pointer; }
     </style>
-    <title>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 20:04:11.338520514 +0000 UTC m=+2.394277308 </title>
+    <title>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 20:41:51.837165723 +0000 UTC m=+2.172392664 </title>
     <script>
       window.onload = function() {
         document.querySelectorAll('td.links').forEach(function(linkCell) {
@@ -81,7 +81,7 @@
     </script>
   </head>
   <body>
-    <h1>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 20:04:11.338539319 +0000 UTC m=+2.394296113</h1>
+    <h1>k8s/base/api/api-configmap.yaml - Trivy Report - 2026-01-12 20:41:51.837187223 +0000 UTC m=+2.172414164</h1>
     <table>
       <tr class="group-header"><th colspan="6">kubernetes</th></tr>
       <tr><th colspan="6">No Vulnerabilities found</th></tr>
@@ -520,6 +520,12 @@
       <tr><th colspan="6">No Misconfigurations found</th></tr>
       <tr class="group-header"><th colspan="6">kubernetes</th></tr>
       <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">kubernetes</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
       <tr class="sub-header">
         <th>Type</th>
         <th>Misconf ID</th>
@@ -541,37 +547,13 @@
       </tr>
       <tr class="severity-HIGH">
         <td class="misconf-type">Kubernetes Security Check</td>
-        <td>KSV047</td>
-        <td class="misconf-check">Do not allow privilege escalation from node proxy</td>
+        <td>KSV056</td>
+        <td class="misconf-check">Manage Kubernetes networking</td>
         <td class="severity">HIGH</td>
         <td class="link" data-more-links="off"  style="white-space:normal;">
-          Role permits privilege escalation from node proxy
+          ClusterRole &#39;trivy-operator&#39; should not have access to resources [&#34;services&#34;, &#34;endpoints&#34;, &#34;endpointslices&#34;, &#34;networkpolicies&#34;, &#34;ingresses&#34;] for verbs [&#34;create&#34;, &#34;update&#34;, &#34;patch&#34;, &#34;delete&#34;, &#34;deletecollection&#34;, &#34;impersonate&#34;, &#34;*&#34;]
           <br>
-            <a href="https://avd.aquasec.com/misconfig/ksv047">https://avd.aquasec.com/misconfig/ksv047</a>
-          </br>
-        </td>
-      </tr>
-      <tr class="severity-HIGH">
-        <td class="misconf-type">Kubernetes Security Check</td>
-        <td>AVD-KSV-0109</td>
-        <td class="misconf-check">ConfigMap with secrets</td>
-        <td class="severity">HIGH</td>
-        <td class="link" data-more-links="off"  style="white-space:normal;">
-          ConfigMap &#39;trivy-operator-config&#39; in &#39;trivy-system&#39; namespace stores secrets in key(s) or value(s) &#39;{&#34;OPERATOR_ACCESS_GLOBAL_SECRETS_SERVICE_ACCOUNTS&#34;, &#34;OPERATOR_EXPOSED_SECRET_SCANNER_ENABLED&#34;, &#34;OPERATOR_METRICS_EXPOSED_SECRET_INFO_ENABLED&#34;, &#34;OPERATOR_PRIVATE_REGISTRY_SCAN_SECRETS_NAMES&#34;}&#39;
-          <br>
-            <a href="https://avd.aquasec.com/misconfig/avd-ksv-0109">https://avd.aquasec.com/misconfig/avd-ksv-0109</a>
-          </br>
-        </td>
-      </tr>
-      <tr class="severity-HIGH">
-        <td class="misconf-type">Kubernetes Security Check</td>
-        <td>KSV118</td>
-        <td class="misconf-check">Default security context configured</td>
-        <td class="severity">HIGH</td>
-        <td class="link" data-more-links="off"  style="white-space:normal;">
-          deployment trivy-operator in trivy-system namespace is using the default security context, which allows root privileges
-          <br>
-            <a href="https://avd.aquasec.com/misconfig/ksv118">https://avd.aquasec.com/misconfig/ksv118</a>
+            <a href="https://avd.aquasec.com/misconfig/ksv056">https://avd.aquasec.com/misconfig/ksv056</a>
           </br>
         </td>
       </tr>
