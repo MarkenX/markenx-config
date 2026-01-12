@@ -54,3 +54,219 @@ spec:
         openAPIV3Schema:
           type: object
           x-kubernetes-preserve-unknown-fields: true
+---
+# ExposedSecretReport CRD - Required by operator even if scanner is disabled
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: exposedsecretreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ExposedSecretReport
+    listKind: ExposedSecretReportList
+    plural: exposedsecretreports
+    singular: exposedsecretreport
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# SbomReport CRD - Required by operator even if scanner is disabled
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: sbomreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: SbomReport
+    listKind: SbomReportList
+    plural: sbomreports
+    singular: sbomreport
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# ClusterSbomReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clustersbomreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ClusterSbomReport
+    listKind: ClusterSbomReportList
+    plural: clustersbomreports
+    singular: clustersbomreport
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# ConfigAuditReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: configauditreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ConfigAuditReport
+    listKind: ConfigAuditReportList
+    plural: configauditreports
+    singular: configauditreport
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# ClusterConfigAuditReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clusterconfigauditreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ClusterConfigAuditReport
+    listKind: ClusterConfigAuditReportList
+    plural: clusterconfigauditreports
+    singular: clusterconfigauditreport
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# InfraAssessmentReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: infraassessmentreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: InfraAssessmentReport
+    listKind: InfraAssessmentReportList
+    plural: infraassessmentreports
+    singular: infraassessmentreport
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# ClusterInfraAssessmentReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clusterinfraassessmentreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ClusterInfraAssessmentReport
+    listKind: ClusterInfraAssessmentReportList
+    plural: clusterinfraassessmentreports
+    singular: clusterinfraassessmentreport
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# RbacAssessmentReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: rbacassessmentreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: RbacAssessmentReport
+    listKind: RbacAssessmentReportList
+    plural: rbacassessmentreports
+    singular: rbacassessmentreport
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+# ClusterRbacAssessmentReport CRD - Required by operator
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clusterrbacassessmentreports.aquasecurity.github.io
+  labels:
+    app.kubernetes.io/name: trivy-operator
+spec:
+  group: aquasecurity.github.io
+  names:
+    kind: ClusterRbacAssessmentReport
+    listKind: ClusterRbacAssessmentReportList
+    plural: clusterrbacassessmentreports
+    singular: clusterrbacassessmentreport
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
