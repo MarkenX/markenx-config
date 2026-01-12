@@ -2,39 +2,62 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: trivy-operator
-  labels:
-    app: trivy-operator
 rules:
-  # Regla 1: Leer y observar recursos del cluster
   - apiGroups: [""]
     resources:
-      - "pods"
-      - "replicationcontrollers"
-      - "services"
       - "configmaps"
-    verbs: ["get", "list", "watch"]
-
-  # Regla 2: Leer recursos de apps y batch
-  - apiGroups: ["apps", "batch"]
-    resources: ["deployments", "daemonsets", "statefulsets", "replicasets", "jobs", "cronjobs"]
-    verbs: ["get", "list", "watch"]
-
-  # Regla 3: Gestionar los Custom Resources propios
-  - apiGroups: ["aquasecurity.github.io"]
-    resources: ["vulnerabilityreports", "configauditreports"]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-
-  # Regla 4: Ver namespaces
-  - apiGroups: [""]
-    resources: ["namespaces"]
-    verbs: ["get", "list"]
-
-  # Regla 5: Crear Jobs para escaneos
+      - "pods"
+      - "secrets"
+      - "services"
+      - "serviceaccounts"
+      - "events"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+  - apiGroups: ["apps"]
+    resources:
+      - "daemonsets"
+      - "deployments"
+      - "replicasets"
+      - "statefulsets"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
   - apiGroups: ["batch"]
-    resources: ["jobs"]
-    verbs: ["create", "delete"]
-
-  # Regla 6: Ver eventos
+    resources:
+      - "cronjobs"
+      - "jobs"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "delete"
+  - apiGroups: ["aquasecurity.github.io"]
+    resources:
+      - "vulnerabilityreports"
+      - "configauditreports"
+      - "clusterconfigauditreports"
+      - "clustercompliancereports"
+      - "rbacassessmentreports"
+      - "exposedsecretreports"
+      - "infraassessmentreports"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
   - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create", "patch"]
+    resources:
+      - "namespaces"
+    verbs:
+      - "get"
+      - "list"
