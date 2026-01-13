@@ -7,4 +7,3 @@ resources:
   - api
   - keycloak
   - nginx
-  - trivy

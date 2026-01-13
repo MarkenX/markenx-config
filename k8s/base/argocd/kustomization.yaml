@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  - trivy-application.yaml
   - api-application.yaml
   - keycloak-application.yaml
   - ngnix-application.yaml
