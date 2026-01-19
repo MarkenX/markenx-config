@@ -31,3 +31,6 @@ nodeExporter:
 
 kubeStateMetrics:
   enabled: true
+
+crds:
+  enabled: false
