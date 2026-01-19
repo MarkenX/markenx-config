@@ -6,6 +6,7 @@ namespace: argocd
 
 resources:
   - namespace.yaml
+  - crds
   - monitoring-application.yaml
   - api-application.yaml
   - keycloak-application.yaml
