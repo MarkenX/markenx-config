@@ -33,4 +33,4 @@ kubeStateMetrics:
   enabled: true
 
 crds:
-  enabled: true
+  enabled: false

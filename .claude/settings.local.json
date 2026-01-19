@@ -14,7 +14,10 @@
       "Bash(helm list:*)",
       "Bash(argocd app sync:*)",
       "Bash(kubectl -n argocd patch application monitoring-stack --type=merge -p '{\"\"operation\"\":{\"\"initiatedBy\"\":{\"\"username\"\":\"\"admin\"\"},\"\"sync\"\":{\"\"syncStrategy\"\":{\"\"hook\"\":{}}}}}')",
-      "Bash(kubectl kustomize:*)"
+      "Bash(kubectl kustomize:*)",
+      "Bash(minikube ssh \"docker images | grep webhook\")",
+      "Bash(minikube ssh:*)",
+      "Bash(curl:*)"
     ]
   }
 }
