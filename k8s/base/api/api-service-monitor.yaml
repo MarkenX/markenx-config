@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: markenx-api
+  namespace: monitoring
+  labels:
+    release: monitoring-stack
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  namespaceSelector:
+    matchNames:
+      - markenx
+
+  selector:
+    matchLabels:
+      app: markenx-api
+
+  endpoints:
+    - port: http
+      path: /actuator/prometheus
+      interval: 15s
