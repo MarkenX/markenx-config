@@ -9,7 +9,12 @@
       "Bash(kubectl describe:*)",
       "Bash(kubectl apply:*)",
       "Bash(kubectl rollout:*)",
-      "Bash(kubectl logs:*)"
+      "Bash(kubectl logs:*)",
+      "Bash(minikube status:*)",
+      "Bash(helm list:*)",
+      "Bash(argocd app sync:*)",
+      "Bash(kubectl -n argocd patch application monitoring-stack --type=merge -p '{\"\"operation\"\":{\"\"initiatedBy\"\":{\"\"username\"\":\"\"admin\"\"},\"\"sync\"\":{\"\"syncStrategy\"\":{\"\"hook\"\":{}}}}}')",
+      "Bash(kubectl kustomize:*)"
     ]
   }
 }

@@ -9,4 +9,5 @@ resources:
   - api-deployment.yaml
   - api-service.yaml
   - api-ingress.yaml
+  - api-service-monitor.yaml
   - mysql
