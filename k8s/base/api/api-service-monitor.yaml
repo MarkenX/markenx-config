@@ -18,5 +18,5 @@ spec:
 
   endpoints:
     - port: http
-      path: /actuator/prometheus
+      path: /api/v1/actuator/prometheus
       interval: 15s
