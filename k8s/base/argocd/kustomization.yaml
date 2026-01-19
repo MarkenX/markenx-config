@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: argocd
 
 resources:
+  - namespace.yaml
+  - monitoring-application.yaml
   - api-application.yaml
   - keycloak-application.yaml
   - ngnix-application.yaml
